@@ -1,1 +1,2 @@
-# crm-eva-autos-server
+# ZSA Restaurant Backend
+**ZSA Restaurant Backend** is a RESTful API service built to power the ZSA Restaurant web and mobile applications. It manages all core functionalities like menu management, orders, reservations, user accounts, and payments.
