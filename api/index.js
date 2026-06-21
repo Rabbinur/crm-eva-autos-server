@@ -767,7 +767,12 @@ var Service = class {
     console.log(
       `A new account registered. New otp ${otp} has been sent to ${email}`
     );
-    await OTPEmailTemplates.accountVerificationOtp({ name, email, otp });
+    try {
+      await OTPEmailTemplates.accountVerificationOtp({ name, email, otp });
+    } catch (error) {
+      await pubClient.del(`otp:${email}`);
+      throw error;
+    }
   }
   async verifyOTP(email, otp) {
     const storedOtp = await pubClient.get(`otp:${email}`);
@@ -795,7 +800,12 @@ var Service = class {
     }
     const otp = await this.generateOtp();
     await pubClient.set(`otp:${email}`, otp.toString(), { ex: 120 });
-    await OTPEmailTemplates.accountVerificationOtp({ name, email, otp });
+    try {
+      await OTPEmailTemplates.accountVerificationOtp({ name, email, otp });
+    } catch (error) {
+      await pubClient.del(`otp:${email}`);
+      throw error;
+    }
   }
   async generateOtp() {
     return Math.floor(1e5 + Math.random() * 9e5);
