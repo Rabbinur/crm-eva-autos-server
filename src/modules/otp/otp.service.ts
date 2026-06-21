@@ -43,8 +43,13 @@ class Service {
       `A new account registered. New otp ${otp} has been sent to ${email}`
     );
 
-    // send email to verify account
-    await OTPEmailTemplates.accountVerificationOtp({ name, email, otp });
+    try {
+      // send email to verify account
+      await OTPEmailTemplates.accountVerificationOtp({ name, email, otp });
+    } catch (error) {
+      await pubClient.del(`otp:${email}`);
+      throw error;
+    }
   }
 
   async verifyOTP(email: string, otp: number) {
@@ -81,8 +86,13 @@ class Service {
     const otp = await this.generateOtp();
     await pubClient.set(`otp:${email}`, otp.toString(), { ex: 120 });
 
-    // send email
-    await OTPEmailTemplates.accountVerificationOtp({ name, email, otp });
+    try {
+      // send email
+      await OTPEmailTemplates.accountVerificationOtp({ name, email, otp });
+    } catch (error) {
+      await pubClient.del(`otp:${email}`);
+      throw error;
+    }
   }
 
   private async generateOtp(): Promise<number> {
