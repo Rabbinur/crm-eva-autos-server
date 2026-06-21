@@ -16,6 +16,7 @@ class Mail {
     const secure = port === 465;
 
     const transporter = nodemailer.createTransport({
+      service: "gmail",
       host: envConfig.email.host,
       port: port,
       secure: secure,
