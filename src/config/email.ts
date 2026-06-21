@@ -24,9 +24,9 @@ class Mail {
         user: envConfig.email.user,
         pass: envConfig.email.pass,
       },
-      tls: {
-        rejectUnauthorized: false,
-      },
+      // tls: {
+      //   rejectUnauthorized: false,
+      // },
     });
 
     const mailOptions: SMTPTransport.Options = {
