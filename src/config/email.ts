@@ -12,13 +12,19 @@ class Mail {
     bcc?: string[],
     cc?: string[]
   ) {
+    const port = Number(envConfig.email.port);
+    const secure = port === 465;
+
     const transporter = nodemailer.createTransport({
       host: envConfig.email.host,
-      port: envConfig.email.port,
-      secure: true,
+      port: port,
+      secure: secure,
       auth: {
         user: envConfig.email.user,
         pass: envConfig.email.pass,
+      },
+      tls: {
+        rejectUnauthorized: false,
       },
     });
 
