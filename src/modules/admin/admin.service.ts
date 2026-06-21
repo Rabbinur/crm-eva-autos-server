@@ -24,7 +24,14 @@ class Service {
     console.log("[createAdmin] 4. Admin created successfully");
     // send verification email with OTP
     console.log("[createAdmin] 5. Sending account verification OTP");
-    OTPService.sendAccountVerificationOtp(data.name, data.email, "admin");
+    OTPService.sendAccountVerificationOtp(data.name, data.email, "admin").catch(
+      (error) => {
+        console.error(
+          "Failed to send background verification OTP email:",
+          error
+        );
+      }
+    );
   }
 
   async resendVerificationOtp(email: string) {

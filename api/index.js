@@ -993,11 +993,15 @@ var Service2 = class {
     await this.isAlreadyHaveAnAccount(data.email);
     console.log("[createAdmin] 2. Hashing password");
     data.password = await BcryptInstance.hash(data.password);
-    console.log("[createAdmin] 3. Sending account verification OTP");
-    await OTPService.sendAccountVerificationOtp(data.name, data.email, "admin");
-    console.log("[createAdmin] 4. Creating admin document in MongoDB");
+    console.log("[createAdmin] 3. Creating admin document in MongoDB");
     await AdminModel.create(data);
-    console.log("[createAdmin] 5. Admin created successfully");
+    console.log("[createAdmin] 4. Admin created successfully");
+    console.log("[createAdmin] 5. Sending account verification OTP");
+    OTPService.sendAccountVerificationOtp(data.name, data.email, "admin").catch(
+      (error) => {
+        console.error("Failed to send background verification OTP email:", error);
+      }
+    );
   }
   async resendVerificationOtp(email) {
     const isExist = await AdminModel.findOne({ email });
