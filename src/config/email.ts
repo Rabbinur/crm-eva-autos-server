@@ -12,8 +12,6 @@ class Mail {
     bcc?: string[],
     cc?: string[]
   ) {
-    const port = Number(envConfig.email.port);
-    const secure = port === 465;
     console.log({
       host: envConfig.email.host,
       port: envConfig.email.port,
@@ -21,16 +19,22 @@ class Mail {
       passExists: !!envConfig.email.pass,
     });
 
+    // const transporter = nodemailer.createTransport({
+    //   host: envConfig.email.host,
+    //   port: port,
+    //   secure: secure,
+    //   auth: {
+    //     user: envConfig.email.user,
+    //     pass: envConfig.email.pass,
+    //   },
+    // });
     const transporter = nodemailer.createTransport({
-      host: envConfig.email.host,
-      port: port,
-      secure: secure,
+      service: "gmail",
       auth: {
         user: envConfig.email.user,
         pass: envConfig.email.pass,
       },
     });
-
     const mailOptions: SMTPTransport.Options = {
       from: `kamrul's <${envConfig.email.user}>`,
       to: to,

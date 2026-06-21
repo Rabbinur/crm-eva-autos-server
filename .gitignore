@@ -10,6 +10,5 @@ npm-debug.log
 .DS_Store
 logs
 key
-.env
-.env.local
 .vercel
+config.bat
