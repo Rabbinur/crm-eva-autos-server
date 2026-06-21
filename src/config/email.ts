@@ -43,7 +43,7 @@ class Mail {
     if (cc) {
       mailOptions.cc = cc;
     }
-
+    console.log("sending email to", to);
     try {
       const info = await transporter.sendMail(mailOptions);
       console.log(
@@ -51,6 +51,7 @@ class Mail {
       );
     } catch (error: any) {
       console.error(`[EmailService] ❌ Failed: ${error.message}`);
+      console.log({ emailError: error });
       throw new ApiError(
         HttpStatusCode.INTERNAL_SERVER_ERROR,
         "Failed to send email. Please try again later."
