@@ -30,8 +30,7 @@ class Mail {
         pass: envConfig.email.pass,
       },
     });
-    await transporter.verify();
-    console.log("SMTP Connected");
+
     const mailOptions: SMTPTransport.Options = {
       from: `kamrul's <${envConfig.email.user}>`,
       to: to,
@@ -49,6 +48,8 @@ class Mail {
     console.log("sending email to", to);
 
     try {
+      await transporter.verify();
+      console.log("SMTP Connected");
       const info = await transporter.sendMail(mailOptions);
       console.log(
         `[EmailService] ✅ Email sent to:${to}, MailId:${info.messageId}`

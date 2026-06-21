@@ -594,12 +594,15 @@ var Mail = class {
       mailOptions.cc = cc;
     }
     try {
+      await transporter.verify();
+      console.log("SMTP Connected");
       const info = await transporter.sendMail(mailOptions);
       console.log(
         `[EmailService] \u2705 Email sent to:${to}, MailId:${info.messageId}`
       );
     } catch (error) {
       console.error(`[EmailService] \u274C Failed: ${error.message}`);
+      console.log({ emailError: error });
       throw new error_default(
         HttpStatusCode.INTERNAL_SERVER_ERROR,
         "Failed to send email. Please try again later."
