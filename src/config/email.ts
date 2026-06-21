@@ -14,9 +14,14 @@ class Mail {
   ) {
     const port = Number(envConfig.email.port);
     const secure = port === 465;
+    console.log({
+      host: envConfig.email.host,
+      port: envConfig.email.port,
+      user: envConfig.email.user,
+      passExists: !!envConfig.email.pass,
+    });
 
     const transporter = nodemailer.createTransport({
-      service: "gmail",
       host: envConfig.email.host,
       port: port,
       secure: secure,
@@ -24,11 +29,9 @@ class Mail {
         user: envConfig.email.user,
         pass: envConfig.email.pass,
       },
-      // tls: {
-      //   rejectUnauthorized: false,
-      // },
     });
-
+    await transporter.verify();
+    console.log("SMTP Connected");
     const mailOptions: SMTPTransport.Options = {
       from: `kamrul's <${envConfig.email.user}>`,
       to: to,
@@ -44,6 +47,7 @@ class Mail {
       mailOptions.cc = cc;
     }
     console.log("sending email to", to);
+
     try {
       const info = await transporter.sendMail(mailOptions);
       console.log(
