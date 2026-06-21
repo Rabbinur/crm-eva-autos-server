@@ -1,16 +1,16 @@
+import { pubClient } from "@/config/redis";
+import { OTPEmailTemplates } from "@/email-templates/verification.otp";
+import JwtHelper from "@/helpers/jwtHelper";
+import { paginationHelpers } from "@/helpers/paginationHelpers";
+import { IPaginationOptions } from "@/interfaces/pagination.interfaces";
+import { BcryptInstance } from "@/lib/bcrypt";
+import { HttpStatusCode } from "@/lib/httpStatus";
+import ApiError from "@/middlewares/error";
 import { Types } from "mongoose";
 import { OTPService } from "../otp/otp.service";
+import { UserModel } from "../users/users.model";
 import { ADMIN_ENUMS, IAdmin, IChangePassword } from "./admin.interface";
 import { AdminModel } from "./admin.model";
-import { UserModel } from "../users/users.model";
-import { BcryptInstance } from "@/lib/bcrypt";
-import ApiError from "@/middlewares/error";
-import { HttpStatusCode } from "@/lib/httpStatus";
-import JwtHelper from "@/helpers/jwtHelper";
-import { IPaginationOptions } from "@/interfaces/pagination.interfaces";
-import { paginationHelpers } from "@/helpers/paginationHelpers";
-import { OTPEmailTemplates } from "@/email-templates/verification.otp";
-import { pubClient } from "@/config/redis";
 
 class Service {
   async create(data: IAdmin) {
@@ -19,13 +19,12 @@ class Service {
     console.log("[createAdmin] 2. Hashing password");
     data.password = await BcryptInstance.hash(data.password);
 
-    console.log("[createAdmin] 3. Sending account verification OTP");
-    // send verification email with OTP
-    await OTPService.sendAccountVerificationOtp(data.name, data.email, "admin");
-
-    console.log("[createAdmin] 4. Creating admin document in MongoDB");
+    console.log("[createAdmin] 3. Creating admin document in MongoDB");
     await AdminModel.create(data);
-    console.log("[createAdmin] 5. Admin created successfully");
+    console.log("[createAdmin] 4. Admin created successfully");
+    // send verification email with OTP
+    console.log("[createAdmin] 5. Sending account verification OTP");
+    OTPService.sendAccountVerificationOtp(data.name, data.email, "admin");
   }
 
   async resendVerificationOtp(email: string) {
