@@ -567,18 +567,17 @@ init_config();
 var import_nodemailer = __toESM(require("nodemailer"));
 var Mail = class {
   async sendEmail(subject, to, htmlContent, bcc, cc) {
-    const port = Number(envConfig.email.port);
-    const secure = port === 465;
-    const transporter = import_nodemailer.default.createTransport({
+    console.log({
       host: envConfig.email.host,
-      port: port,
-      secure: secure,
+      port: envConfig.email.port,
+      user: envConfig.email.user,
+      passExists: !!envConfig.email.pass
+    });
+    const transporter = import_nodemailer.default.createTransport({
+      service: "gmail",
       auth: {
         user: envConfig.email.user,
         pass: envConfig.email.pass
-      },
-      tls: {
-        rejectUnauthorized: false
       }
     });
     const mailOptions = {
